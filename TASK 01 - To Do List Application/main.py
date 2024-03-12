@@ -2,9 +2,10 @@ import sys
 import json
 from PyQt5.QtWidgets import (
     QTableWidgetItem, QApplication, QMainWindow,
-    QDialog, QListWidgetItem, QAbstractItemView
+    QDialog, QListWidgetItem, QAbstractItemView, QStyle,
 )
 from PyQt5.uic import loadUi
+from PyQt5.QtGui import QIcon
 
 
 class EditTaskWindow(QDialog):
@@ -13,12 +14,17 @@ class EditTaskWindow(QDialog):
         # load the UI from home.ui
         loadUi("edit.ui", self)
         self.setWindowTitle("Edit Task" if new == False else "Create new Task")
+        self.setWindowIcon(QIcon("icon.png"))
 
         self.save_button.clicked.connect(self.save_task)
         # set the initial values of the title and description
         self.title_edit.setText(title)
         self.description_edit.setText(description)
         self.status_combo.setCurrentText(status)
+        self.save_button.setIcon(
+            QApplication.style().standardIcon(QStyle.SP_DialogSaveButton))
+        self.cancel_button.setIcon(
+            QApplication.style().standardIcon(QStyle.SP_FileDialogBack))
 
     def save_task(self):
         self.accept()
@@ -38,6 +44,8 @@ class MainWindow(QMainWindow):
         # load the UI from home.ui
         loadUi("home.ui", self)
         self.setWindowTitle("To-Do Application")
+        # Replace "icon.png" with your icon file path
+        self.setWindowIcon(QIcon("icon.png"))
 
         self.task_table.setColumnCount(3)
         self.task_table.setHorizontalHeaderLabels(
@@ -49,6 +57,10 @@ class MainWindow(QMainWindow):
             QAbstractItemView.NoSelection)  # Disable selection
 
         self.btn_create.clicked.connect(self.create_task)
+        self.btn_create.setIcon(QApplication.style(
+        ).standardIcon(QStyle.SP_FileDialogNewFolder))
+        self.btn_exit.setIcon(QApplication.style().standardIcon(
+            QStyle.SP_DialogCancelButton))
         self.load_data()
 
     def create_task(self):
