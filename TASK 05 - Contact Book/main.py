@@ -2,11 +2,13 @@ import sys
 import json
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, \
     QLineEdit, QPushButton, QTableWidget, QTableWidgetItem, QDialog, QFormLayout, QMessageBox
+from PyQt5.QtGui import QIcon
 
 
 class AddContactDialog(QDialog):
     def __init__(self, parent=None):
         super(AddContactDialog, self).__init__(parent)
+        self.setWindowIcon(QIcon('icon.png'))
         self.setWindowTitle("Add Contact")
         layout = QFormLayout()
         self.name_input = QLineEdit()
@@ -40,6 +42,7 @@ class AddContactDialog(QDialog):
 class EditContactDialog(QDialog):
     def __init__(self, contact_info, parent=None):
         super(EditContactDialog, self).__init__(parent)
+        self.setWindowIcon(QIcon('icon.png'))
         self.setWindowTitle("Edit Contact")
         layout = QFormLayout()
         self.name_input = QLineEdit(contact_info[0])
@@ -75,6 +78,8 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         self.setWindowTitle("Contact Book")
         self.resize(600, 400)
+        # load icon for the window
+        self.setWindowIcon(QIcon('icon.png'))
         self.central_widget = QWidget()
         self.layout = QVBoxLayout()
         self.contact_table = QTableWidget()
