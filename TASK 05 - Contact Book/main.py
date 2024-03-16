@@ -1,6 +1,6 @@
 import sys
 import json
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, \
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QAbstractItemView, QLabel, \
     QLineEdit, QPushButton, QTableWidget, QTableWidgetItem, QDialog, QFormLayout, QMessageBox
 from PyQt5.QtGui import QIcon
 
@@ -84,6 +84,10 @@ class MainWindow(QMainWindow):
         self.layout = QVBoxLayout()
         self.contact_table = QTableWidget()
         self.contact_table.setColumnCount(4)
+        self.contact_table.setEditTriggers(
+            QAbstractItemView.NoEditTriggers)  # Disable editing
+        self.contact_table.setSelectionMode(
+            QAbstractItemView.NoSelection)  # Disable selection
         self.contact_table.setHorizontalHeaderLabels(
             ["Name", "Phone", "Email", "Address"])
         self.layout.addWidget(self.contact_table)
@@ -94,6 +98,10 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
         self.contacts = []
         self.load_contacts()
+
+        # Connect double click event to open edit dialog
+        self.contact_table.itemDoubleClicked.connect(
+            self.open_edit_contact_dialog)
 
     def open_add_contact_dialog(self):
         dialog = AddContactDialog(self)
@@ -110,10 +118,13 @@ class MainWindow(QMainWindow):
             for col, value in enumerate(contact):
                 self.contact_table.setItem(row, col, QTableWidgetItem(value))
 
-    def open_edit_contact_dialog(self, row):
-        if row < len(self.contacts):
-            dialog = EditContactDialog(self.contacts[row], self)
-            dialog.exec_()
+    def open_edit_contact_dialog(self, item):
+        # Get the row of the double-clicked item
+        if item is not None:
+            row = item.row()
+            if row < len(self.contacts):
+                dialog = EditContactDialog(self.contacts[row], self)
+                dialog.exec_()
 
     def edit_contact(self, contact_info):
         index = self.contact_table.currentRow()
