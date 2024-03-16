@@ -74,6 +74,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setWindowTitle("Contact Book")
+        self.resize(600, 400)
         self.central_widget = QWidget()
         self.layout = QVBoxLayout()
         self.contact_table = QTableWidget()
