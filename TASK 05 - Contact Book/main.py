@@ -1,4 +1,5 @@
 import sys
+import json
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, \
     QLineEdit, QPushButton, QTableWidget, QTableWidgetItem, QDialog, QFormLayout, QMessageBox
 
@@ -86,6 +87,7 @@ class MainWindow(QMainWindow):
         self.central_widget.setLayout(self.layout)
         self.setCentralWidget(self.central_widget)
         self.contacts = []
+        self.load_contacts()
 
     def open_add_contact_dialog(self):
         dialog = AddContactDialog(self)
@@ -94,6 +96,7 @@ class MainWindow(QMainWindow):
     def add_contact(self, contact_info):
         self.contacts.append(contact_info)
         self.display_contacts()
+        self.save_contacts()
 
     def display_contacts(self):
         self.contact_table.setRowCount(len(self.contacts))
@@ -111,6 +114,19 @@ class MainWindow(QMainWindow):
         if index < len(self.contacts):
             self.contacts[index] = contact_info
             self.display_contacts()
+            self.save_contacts()
+
+    def load_contacts(self):
+        try:
+            with open('data.json', 'r') as file:
+                self.contacts = json.load(file)
+                self.display_contacts()
+        except FileNotFoundError:
+            pass
+
+    def save_contacts(self):
+        with open('data.json', 'w') as file:
+            json.dump(self.contacts, file)
 
 
 if __name__ == '__main__':
